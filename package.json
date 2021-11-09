@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@angular/google-maps": "^13.0.0",
     "flask": "^0.2.10"
   }
 }
