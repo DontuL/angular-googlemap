@@ -43,17 +43,27 @@ markerList : google.maps.MarkerOptions[];
     if (label.includes("elettrica")) {
       return { url: './assets/img/electricity.ico', scaledSize: new google.maps.Size(32,32) };
     }
-    return {url: './assets/img/undefined.ico' , scaledSize: new google.maps.Size(32,32)}
+    if (label.includes("Gasolio")) {
+      return { url: './assets/img/electricity.ico', scaledSize: new google.maps.Size(32,32) };
+    }
+    if (label.includes("NULL")) {
+      return { url: './assets/img/electricity.ico', scaledSize: new google.maps.Size(32,32) };
+    }if (label.includes("elettrica")) {
+      return { url: './assets/img/electricity.ico', scaledSize: new google.maps.Size(32,32) };
+    }
+    //Se non viene riconosciuta nessuna etichetta ritorna l'icona undefined
+      return {url: './assets/img/undefined.ico' , scaledSize: new google.maps.Size(32,32)}
   }
-  prepareCiVettData = (data: Ci_vettore[]) =>
-  {
+
+
+  prepareCiVettData = (data: Ci_vettore[]) => {
     console.log(data); //Verifica di ricevere i vettori energetici
     this.markerList = []; //NB: markers va dichiarata tra le proprietà markers : Marker[]
     for (const iterator of data) { //Per ogni oggetto del vettore creo un Marker
-      let m : google.maps.MarkerOptions = 
+      let m: google.maps.MarkerOptions =
       {
-       position : new google.maps.LatLng (iterator.WGS84_X, iterator.WGS84_Y),
-       label : iterator.CI_VETTORE 
+        position: new google.maps.LatLng(iterator.WGS84_X, iterator.WGS84_Y),
+        icon : this.findImage(iterator.CI_VETTORE)
       }
       //Marker(iterator.WGS84_X,iterator.WGS84_Y,iterator.CI_VETTORE);
       this.markerList.push(m);
@@ -62,9 +72,9 @@ markerList : google.maps.MarkerOptions[];
   
   ngAfterViewInit() {
     console.log("ciao");
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://5000-blush-cat-tl1jbojr.ws-eu18.gitpod.io/ci_vettore/50");
+    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://5000-blush-cat-tl1jbojr.ws-eu18.gitpod.io/ci_vettore/69");
     this.obsGeoData.subscribe(this.prepareData);
-    this.obsCiVett = this.http.get<Ci_vettore[]>("https://5000-blush-cat-tl1jbojr.ws-eu18.gitpod.io/ci_vettore/140");
+    this.obsCiVett = this.http.get<Ci_vettore[]>("https://5000-blush-cat-tl1jbojr.ws-eu18.gitpod.io/ci_vettore/69");
 this.obsCiVett.subscribe(this.prepareCiVettData);
     
   }
