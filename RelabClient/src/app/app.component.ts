@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Component, ViewChild } from '@angular/core';
 import { GoogleMap, MapMarker } from '@angular/google-maps'
 import { Observable } from 'rxjs';
@@ -68,13 +68,32 @@ markerList : google.maps.MarkerOptions[];
       //Marker(iterator.WGS84_X,iterator.WGS84_Y,iterator.CI_VETTORE);
       this.markerList.push(m);
     }
+    this.center = this.LatLngMedia(data);
   }
+
+  LatLngMedia(data: Ci_vettore[]): google.maps.LatLngLiteral {
+   
+    let center = { lat: 0, lng: 0};
+    let sumLat = 0;
+    let sumLng = 0;
+    let x = 0;
+    let y = 0;
+   for(const iterator of data){
+     sumLat += Number(iterator.WGS84_X)
+     sumLng += Number(iterator.WGS84_Y)
+     x += 1;
+     y += 1;
+   }
+   center = {lat: sumLat/x, lng: sumLng/y}
+   return center
+  }
+
   
   ngAfterViewInit() {
     console.log("ciao");
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://5000-blush-cat-tl1jbojr.ws-eu18.gitpod.io/ci_vettore/69");
+    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://5000-blush-cat-tl1jbojr.ws-eu18.gitpod.io/ci_vettore/50");
     this.obsGeoData.subscribe(this.prepareData);
-    this.obsCiVett = this.http.get<Ci_vettore[]>("https://5000-blush-cat-tl1jbojr.ws-eu18.gitpod.io/ci_vettore/69");
+    this.obsCiVett = this.http.get<Ci_vettore[]>("https://5000-blush-cat-tl1jbojr.ws-eu18.gitpod.io/ci_vettore/140");
 this.obsCiVett.subscribe(this.prepareCiVettData);
     
   }
