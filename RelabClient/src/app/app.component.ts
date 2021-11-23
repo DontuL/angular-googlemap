@@ -22,9 +22,11 @@ export class AppComponent implements AfterViewInit {
   zoom = 8;
   obsCiVett : Observable<Ci_vettore[]>; //Crea un observable per ricevere i vettori energetici
 markerList : google.maps.MarkerOptions[];
-
+circleCenter: google.maps.LatLngLiteral = {lat: 10, lng: 15};
+radius = 0;
+circleOption:{}
   constructor(public http: HttpClient) {
-    
+   
     //Facciamo iniettare il modulo HttpClient dal framework Angular (ricordati di importare la libreria)
   }
 
@@ -87,15 +89,25 @@ markerList : google.maps.MarkerOptions[];
    center = {lat: sumLat/x, lng: sumLng/y}
    return center
   }
-
-  
-  ngAfterViewInit() {
-    console.log("ciao");
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://5000-blush-cat-tl1jbojr.ws-eu18.gitpod.io/ci_vettore/50");
-    this.obsGeoData.subscribe(this.prepareData);
-    this.obsCiVett = this.http.get<Ci_vettore[]>("https://5000-blush-cat-tl1jbojr.ws-eu18.gitpod.io/ci_vettore/140");
-this.obsCiVett.subscribe(this.prepareCiVettData);
-    
+  mapClicked($event: google.maps.MapMouseEvent) {
+    console.log($event);
+    let coords= $event.latLng; //Queste sono le coordinate cliccate
+    this.center = { lat: coords.lat(), lng: coords.lng() };
+    this.circleCenter = this.center;
+    this.radius = 4000
   }
   
+  ngAfterViewInit() {
+    this.circleOption =  {fillColor : 'red', clickable : true, editable : true}
+
+    
+  }  cambiaFoglio(foglio) : boolean
+  {
+    let val = foglio.value; //Commenta qui
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://5000-blush-cat-tl1jbojr.ws-eu17.gitpod.io/ci_vettore/${val}`);  //Commenta qui
+    this.obsCiVett.subscribe(this.prepareCiVettData); //Commenta qui
+    console.log(val);
+    return false;
+  }
+
 }
