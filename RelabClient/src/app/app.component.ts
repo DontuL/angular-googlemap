@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Component, ViewChild } from '@angular/core';
-import { GoogleMap, MapMarker } from '@angular/google-maps'
+import { GoogleMap, MapCircle, MapMarker } from '@angular/google-maps'
 import { Observable } from 'rxjs';
 import { Ci_vettore } from './models/Ci_vettore.models';
 import {  GeoFeatureCollection } from './models/geojson.model';
@@ -25,6 +25,7 @@ markerList : google.maps.MarkerOptions[];
 circleCenter: google.maps.LatLngLiteral = {lat: 10, lng: 15};
 radius = 0;
 circleOption:{}
+@ViewChild(MapCircle) circleRef: MapCircle;
   constructor(public http: HttpClient) {
    
     //Facciamo iniettare il modulo HttpClient dal framework Angular (ricordati di importare la libreria)
@@ -95,11 +96,17 @@ circleOption:{}
     this.center = { lat: coords.lat(), lng: coords.lng() };
     this.circleCenter = this.center;
     this.radius = 4000
+    this.circleRef.circle?.setVisible(true);
   }
+  circleRightClicked($event: google.maps.MapMouseEvent) {
+    console.log(this.circleRef.getRadius());
+    console.log(this.circleRef.getCenter());
+    this.circleRef.circle?.setVisible(false);
+  }
+
   
   ngAfterViewInit() {
-    this.circleOption =  {fillColor : 'red', clickable : true, editable : true}
-
+    this.circleOption = { fillColor: 'red', clickable: true, editable: true, radius: 200, visible : false }
     
   }  cambiaFoglio(foglio) : boolean
   {

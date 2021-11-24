@@ -2,7 +2,9 @@
 <google-map (mapClick)="mapClicked($event)" #mapRef [center]="center" [zoom]="zoom" [width]="1000">
     <map-marker *ngFor="let markerOption of markerList" [options]="markerOption">
     </map-marker>
-    <map-circle [center]="circleCenter"
+    <map-circle
+    (circleRightclick) = circleRightClicked($event)
+    [center]="circleCenter"
     [radius]="radius"[options]="circleOption"></map-circle>
   </google-map>
 <form>
